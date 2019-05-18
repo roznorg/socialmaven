@@ -1,13 +1,11 @@
 import csv
 
-import numpy as np
 import pandas as pd
 
 from nltk.tokenize import TreebankWordTokenizer
 from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
 from sklearn.pipeline import Pipeline, FeatureUnion
-from sklearn.metrics import accuracy_score, precision_recall_fscore_support
-from sklearn.metrics import classification_report
+from sklearn.metrics import accuracy_score, precision_recall_fscore_support, classification_report
 
 from sklearn.ensemble import BaggingClassifier, RandomForestClassifier
 from sklearn.multiclass import OneVsRestClassifier
@@ -39,12 +37,12 @@ class SmSentimentalAnalysis:
 
     def set_train_test_data(self):
 
-        docs = pd.read_csv(SMSettings.datasets_root_path.format(SMSettings.default_lang) + SMSettings.training_dataset_name ,encoding="utf-8")
+        docs = pd.read_csv(SMSettings.paths['datasets_root_path'].format(SMSettings.default_lang) + SMSettings.training_dataset_name ,encoding="utf-8")
         msk = np.random.rand(len(docs["polarity"])) < 0.8
         self.train_data_content = docs["text"][msk]
         self.train_data_label = docs["polarity"][msk]
 
-        docs_test = pd.read_csv(SMSettings.datasets_root_path.format(SMSettings.default_lang) + SMSettings.test_dataset_name ,encoding="utf-8")
+        docs_test = pd.read_csv(SMSettings.paths['datasets_root_path'].format(SMSettings.default_lang) + SMSettings.test_dataset_name ,encoding="utf-8")
         msk_test = np.random.rand(len(docs_test["polarity"])) < 0.2
 
         self.test_data_content = docs_test["text"][msk_test]
