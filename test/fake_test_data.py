@@ -1,2 +1,2 @@
 class FakeTestData:
-    twitter_screen_name = "KingSalman"
+    twitter_screen_name = "MohammedAssaf89"

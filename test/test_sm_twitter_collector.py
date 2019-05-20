@@ -11,11 +11,16 @@ import unittest
 class TestSmTwitterCollector(unittest.TestCase):
 
     def setUp(self):
-        self.sm_twitter_collector =  SMTwitterCollector()
+        self.sm_twitter_collector =  SMTwitterCollector(FakeTestData.twitter_screen_name)
 
     def test_get_tweets(self):
-        self.assertTrue(self.sm_twitter_collector.get_user_tweets(FakeTestData.twitter_screen_name) != None)
+        self.assertTrue(self.sm_twitter_collector.get_user_tweets(5) != None)
 
+    def test_prepare_classification(self):
+        (max_id, user_json_file) = self.sm_twitter_collector.get_user_tweets(5)
+        (status, user_csv_file) = self.sm_twitter_collector.process_tweets_json_to_csv(max_id)
+        self.assertTrue(status)
+        
     def tearDown(self):
         pass
 
