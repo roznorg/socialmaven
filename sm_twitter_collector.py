@@ -17,7 +17,7 @@ class SMTwitterCollector:
         self.twitter_api = tweepy.API(auth)
         self.currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
         self.screen_name = screen_name
-        self.user_data_folder_path = self.currentdir + "/" + SMSettings.paths['dataForClassifications'].format(self.screen_name)
+        self.user_data_folder_path =  SMSettings.paths['dataForClassifications'].format(self.screen_name)
 
 
     def _check_data_collected_before(self, max_id):
@@ -28,7 +28,13 @@ class SMTwitterCollector:
                 return True, saved_tweets_file
         return False, None
 
-    #
+    def _clean_tweet_text(self, tweet):
+        clean_text = tweet_cleaner.clean_tweet(tweet)
+        clean_text = tweet_cleaner.normalize_arabic(clean_text)
+        clean_text = tweet_cleaner.remove_repeating_char(clean_text)
+        clean_text = tweet_cleaner.keep_only_arabic(clean_text.split())
+        return clean_text
+
     def process_tweets_json_to_csv(self, max_id):
         (collected_before, user_json_file) = self._check_data_collected_before(max_id)
         if(not collected_before):
@@ -40,15 +46,13 @@ class SMTwitterCollector:
 
         writer_data_classifications_csv_file = csv.writer(data_classifications_csv)
         csv_data = []
+        csv_data.append(["text"])
         with open(user_json_file) as json_reader:
             lines = json_reader.readlines()
             for line in lines:
                 json_tweet = json.loads(line)
                 text = json_tweet['text']
-                clean_text = tweet_cleaner.clean_tweet(text)
-                clean_text = tweet_cleaner.normalize_arabic(clean_text)
-                clean_text = tweet_cleaner.remove_repeating_char(clean_text)
-                clean_text = tweet_cleaner.keep_only_arabic(clean_text.split())
+                clean_text = self._clean_tweet_text(text)
                 csv_data.append([clean_text])
             writer_data_classifications_csv_file.writerows(csv_data)
             data_classifications_csv.close()
