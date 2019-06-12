@@ -11,6 +11,7 @@ from sklearn.ensemble import BaggingClassifier, RandomForestClassifier
 from sklearn.multiclass import OneVsRestClassifier
 from sklearn.svm import SVC, LinearSVC
 import os,sys,inspect
+import numpy as np
 
 from libs.vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 from sm_settings import SMSettings
@@ -86,4 +87,4 @@ class SmSentimentalAnalysis:
 
 
 # if __name__ == '__main__':
-#     sm_sentimental_analysis = SmSentimentalAnalysis()
+#     sm_sentimental_analysis = SmSentimentalAnalysis(False)
